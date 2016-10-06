@@ -1,18 +1,10 @@
-# Slim Framework 3 Skeleton Application
-
-Use this skeleton application to quickly setup and start working on a new Slim Framework 3 application. This application uses the latest Slim 3 with the PHP-View template renderer. It also uses the Monolog logger.
-
-This skeleton application was built for Composer. This makes setting up a new Slim Framework application quick and easy.
-
-## Install the Application
-
-Run this command from the directory in which you want to install your new Slim Framework application.
-
-    php composer.phar create-project slim/slim-skeleton [my-app-name]
-
-Replace `[my-app-name]` with the desired directory name for your new application. You'll want to:
-
-* Point your virtual host document root to your new application's `public/` directory.
-* Ensure `logs/` is web writeable.
-
-That's it! Now go build something cool.
+# Restful+Slimframework+Vue实现的图书租赁销售系统
+## 新手练习简单的  `Restful`
+* 后端使用`slim`框架结合`laravel`的`Eloquent` ORM
+* 前端使用一些简单的`Vue`数据绑定,在books文件夹内
+* 把前端界面塞到了`nwjs`里面了，所以有少量`nwjs`代码
+## 学习技能
+* `php`了解到了一些闭包及路由,简单的依赖注入，以及一些中间件知识
+* `restful` 设计的基本原理，以及HTTP中`GET`,`POST`,`PUT`, `DELETE` 四大协议，数据的提交和Header请求。包括`ajax`的跨域请求等知识
+* `Vue` 前端框架数据绑定的入门
+*  js盲，不喜欢js的对象化，只会简单的jq操作，借此学到了 `javascript` 中的对象与数组，以及对对象的一些简单操作，并了解到了`ES5`，`ES6`等基础知识，发现js是门吊炸天的语言，决心好好学习它
