@@ -1,0 +1,17 @@
+{
+	"main": "index.html",
+	"name": "永豪图书管理系统",
+	"description": "用vue+nwjs+restful写的永豪图书管理系统",
+	"version": "0.1.0",
+	"keywords": [ "vue", "restful", "永豪图书管理系统" ],
+	"window": {
+		"title": "永豪图书管理系统",
+		"icon": "logo.png",
+		"frame":true,
+		"min_width":1366,
+		"min_height":768
+	},
+	"webkit": {
+		"plugin": true
+	}
+}

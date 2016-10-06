@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>永豪图书管理系统</title><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/fullcalendar.css" />
+<link rel="stylesheet" href="css/maruti-style.css" />
+<link rel="stylesheet" href="css/maruti-media.css" class="skin-color" />
+<link rel="stylesheet" href="css/uniform.css" />
+<link rel="stylesheet" href="css/select2.css" />
+</head>
+<body>
+<div id="header">
+  <h1><a href="/">永豪图书管理系统</a></h1>
+</div>
+<div class="btn-group rightzero"> <a class="top_message tip-left" title="Manage Files"><i class="icon-file"></i></a> <a class="top_message tip-bottom" title="Manage Users"><i class="icon-user"></i></a> <a class="top_message tip-bottom" title="Manage Comments"><i class="icon-comment"></i><span class="label label-important">5</span></a> <a class="top_message tip-bottom" title="Manage Orders"><i class="icon-shopping-cart"></i></a> </div>
+<div id="user-nav" class="navbar navbar-inverse">
+  <ul class="nav">
+    <li class=""><a title="" href="data.html"><i class="icon icon-signal"></i> <span class="text">报表</span></a></li>
+    <!-- <li class=""><a title="" href="setting.html"><i class="icon icon-cog"></i> <span class="text">设置</span></a></li> -->
+    <li class=""><a title="退出" href="#" id="quit"><i class="icon icon-off"></i> <span class="text">退出</span></a></li>
+  </ul>
+</div>
+<div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> 已租图书  </a>
+  <ul>
+    <li class="active"><a href="index.html"><i class="icon icon-star"></i> <span>已租图书</span></a></li>
+    <li> <a href="sells.html"><i class="icon icon-leaf"></i> <span>销售历史</span></a> </li>
+    <li> <a href="users.html"><i class="icon icon-user"></i> <span>会员列表</span></a> </li>
+    <li><a href="books.html"><i class="icon icon-book"></i> <span>图书仓库</span></a></li>
+    <li><a href="rerents.html"><i class="icon icon-ok"></i> <span>已还历史</span></a></li>
+  </ul>
+</div>
+<div id="content">
+  <div id="content-header">
+	  <div  class="quick-actions_homepage">
+		<ul class="quick-actions">
+			  <li> <a href="#" id="rent"> <i class="icon-lock"></i> 租借图书 </a> </li>
+			  <li> <a href="#" id="sell"> <i class="icon-shopping-bag"></i>销售图书</a> </li>
+			  <li> <a href="#" id="book_add"> <i class="icon-pdf"></i> 图书入库</a> </li>
+			  <li> <a href="#" id="user_add"> <i class="icon-user"></i>会员办卡 </a> </li>
+			  <li> <a href="#" id="user_cate"> <i class="icon-survey"></i> 办卡方案 </a> </li>
+			  <li> <a href="#" id="book_cate"> <i class="icon-book"></i> 图书类型 </a> </li>
+		</ul>
+	  </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title">
+            <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>会员列表</h5>
+			<div class="data-buttons"><a href="#" id="data-refresh" class="btn btn-mini btn-danger"><i class="icon-refresh"></i>刷新</a></div>
+			<span class="data-search"><select id="ser_type"><option value="card_id">会员卡</option><option value="user_name">会员名</option><option value="phone">手机号</option><option value="idcard">证件号</option></select><input type="text" id="ser" placeholder="关键字"/><button type="submit" id="search-btn" class="tip-bottom" title="搜索"><i class="icon-search icon-white"></i></button></span>
+          </div>
+		  
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped with-check" id="table-data">
+              <thead>
+                <tr>
+                  <th>卡号</th>
+                  <th>姓名</th>
+                  <th>性别</th>
+                  <th>证件号码</th>
+                  <th>手机</th>
+                  <th>卡类型</th>
+                  <th>办卡日期</th>
+                  <th>用户余额</th>
+                  <th>备注</th>
+                  <th>用户状态</th>
+                </tr>
+              </thead>
+              <tbody v-for="item in items">
+                <tr class="gradeA">
+                  <td>{{ item.card_id }}</td>
+                  <td>{{ item.user_name }}</td>
+                  <td>{{ item.sex }}</td>
+                  <td>{{ item.idcard }}</td>
+                  <td>{{ item.phone }}</td>
+                  <td>{{ item.ucate_id | tousercate }}</td>
+                  <td>{{ item.join_time | todate }}</td>
+                  <td>{{ item.user_money }}</td>
+                  <td>{{ item.user_note }}</td>
+                  <td>{{ item.status }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="widget-title">
+            <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>操作</h5>
+			<div class="data-buttons"><a href="#" id="pre_page" class="btn btn-mini btn-success"><i class="icon-refresh"></i>上一页</a><a href="#" id="next_page" class="btn btn-mini btn-success"><i class="icon-refresh"></i>下一页</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/jquery.json.js"></script> 
+<script src="js/maruti.js"></script> 
+<script src="js/maruti.tables.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/vue.book.filter.js"></script>
+<script src="js/vue.book.comm.js"></script>
+<script>
+var page=1;
+var DateTable = new Vue({
+	el: '#table-data',
+	data: {
+		items: ''
+	},
+	methods: {
+		load: function() {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/users/users',
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.items=JSON.parse(data).data;
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		search: function(ser,ser_type) {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/users/users',
+				data: {
+					ser:ser,
+					ser_type:ser_type
+				},
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.items=JSON.parse(data).data;
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		load_page: function(page) {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/users/users',
+				type: 'GET',
+				data: {
+					page:page
+				},
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.items=JSON.parse(data).data;
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		}
+	}
+})
+DateTable.load();
+$("#search-btn").click(function(){
+	DateTable.search($("#ser").val(),$("#ser_type").val());
+});
+$("#next_page").click(function(){
+	page++;
+	DateTable.load_page(page);
+});
+$("#pre_page").click(function(){
+	if(page>1) {
+		page--;
+		DateTable.load_page(page);
+	} else {
+		alert("这是第一页");
+	}
+});
+$("#data-refresh").click(function(){
+	page=1;
+	DateTable.load();
+});
+</script>
+</body>
+</html>

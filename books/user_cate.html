@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>永豪图书管理系统</title><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/fullcalendar.css" />
+<link rel="stylesheet" href="css/maruti-style.css" />
+<link rel="stylesheet" href="css/maruti-media.css" class="skin-color" />
+<link rel="stylesheet" href="css/uniform.css" />
+<link rel="stylesheet" href="css/select2.css" />
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title">
+            <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>办卡方案</h5>
+			<div class="data-buttons"><a href="#" id="data-refresh" class="btn btn-mini btn-danger"><i class="icon-refresh"></i>刷新</a></div>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped with-check" id="table-data">
+              <thead>
+                <tr>
+				<th><input type="checkbox" id="title-table-checkbox" name="title-table-checkbox" /></th>
+                  <th>卡名称</th>
+                  <th>预存金额</th>
+                  <th>押金</th>
+                  <th>有效期</th>
+                  <th>折扣</th>
+                  <th>备注</th>
+                  <th width="100">操作</th>
+                </tr>
+              </thead>
+              <tbody v-for="item in items">
+                <tr class="gradeA">
+					<td><input type="checkbox" name="book_id" value="{{ item.id }}"/></td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.yuchun }}</td>
+                  <td>{{ item.yajin }}</td>
+                  <td>{{ item.youxiao }}</td>
+                  <td>{{ item.zhekou }}</td>
+                  <td>{{ item.note }}</td>
+                  <td width="100"><a href="#" onclick="editone({{ item.id }});" class="btn btn-info btn-mini"><i class="icon-retweet"></i>编辑</a><a href="#" onclick="deleteone({{ item.id }});" id="deleteucd" class="btn btn-warning btn-mini"><i class="icon-retweet"></i>删除</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="widget-title">
+            <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>操作</h5>
+			<div class="data-buttons"><a href="#" id="adducd" class="btn btn-success btn-mini"><i class="icon-retweet"></i>新增</a><a href="#" id="deleteucds" class="btn btn-warning btn-mini"><i class="icon-retweet"></i>删除</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/maruti.js"></script> 
+<script src="js/maruti.tables.js"></script>
+<script src="js/vue.js"></script>
+<script>
+var page=1;
+var DateTable = new Vue({
+	el: '#table-data',
+	data: {
+		items: ''
+	},
+	methods: {
+		load: function() {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/usercates/usercates',
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.items=JSON.parse(data).data;
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		deleteucds: function(ids) {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/usercates/usercates',
+				type: 'DELETE',
+				data: {
+					ids:ids
+				},
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						vm.load();
+						alert("删除成功。。");
+					} else {
+						vm.load();
+						alert("删除失败："+JSON.parse(data).data);
+					}
+				},
+				error: function(data) {
+					alert(data);
+				}
+			})
+		}
+	}
+})
+DateTable.load();
+$("#deleteucds").click(function(){
+	var id_array=new Array();
+	$('input[name="book_id"]:checked').each(function(){
+		id_array.push($(this).val());
+	});
+	if(id_array.length<1) {
+		alert("没有选中要删除的分类");
+	} else {
+		DateTable.deleteucds(JSON.stringify(id_array));
+	}
+});
+$("#data-refresh").click(function(){
+	page=1;
+	DateTable.load();
+});
+function deleteone(id) {
+	if(id) {
+		DateTable.deleteucds('['+id+']');
+	} else {
+		alert("没有选中的项目");
+	}
+}
+var gui = require('nw.gui');
+$("#adducd").click(function(){
+	var win = gui.Window.open('user_cate_add.html', {
+		position: 'center',
+		width: 980,
+		height: 500
+	});
+});
+function editone(id) {
+	var win = gui.Window.open('user_cate_edit.html?id='+id, {
+		position: 'center',
+		width: 980,
+		height: 500
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>永豪图书管理系统</title><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/fullcalendar.css" />
+<link rel="stylesheet" href="css/maruti-style.css" />
+<link rel="stylesheet" href="css/maruti-media.css" class="skin-color" />
+<link rel="stylesheet" href="css/uniform.css" />
+<link rel="stylesheet" href="css/select2.css" />
+</head>
+<body>
+  <div class="container-fluid" id="table-data">
+    <div class="row-fluid">
+      <div class="span12">
+		<div class="widget-box">
+			<div class="widget-title">
+				<span class="icon">
+					<i class="icon-align-justify"></i>									
+				</span>
+				<h5>销售图书</h5>
+			</div>
+			<div class="widget-content nopadding">
+				<form class="form-horizontal">
+					<div class="span6">
+						<div class="control-group">
+							<label class="control-label"><select id="user_ser_type"><option value="card_id">会员卡</option><option value="user_name">会员名</option></select></label>
+							<div class="controls">
+							<input type="text" id="user_ser" placeholder="关键字"/><button type="submit" id="search-user" class="tip-bottom" title="搜索"><i class="icon-search icon-white"></i></button></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">卡号</label>
+							<div class="controls"><input type="text" class="span12" name="card_id" value="{{ user.card_id }}" disabled placeholder="卡号" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">姓名</label>
+							<div class="controls"><input type="text" class="span12" name="user_name" value="{{ user.user_name }}" disabled placeholder="姓名" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">备注</label>
+							<div class="controls"><input type="text" class="span12" name="user_note" value="{{ user.user_note }}" disabled placeholder="备注" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"><select id="book_ser_type"><option value="isbn">扫描枪</option><option value="book_name">图书名</option></select></label>
+							<div class="controls">
+							<input type="text" id="book_ser" placeholder="关键字"/><button type="submit" id="search-book" class="tip-bottom" title="搜索"><i class="icon-search icon-white"></i></button></span>
+							</div>
+						</div>
+					</div>
+					<div class="span6">
+						<div class="control-group">
+							<label class="control-label">是否零售</label>
+							<div class="controls"><label><input type="checkbox" id="type" name="radios" />零售</label></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">账户金额</label>
+							<div class="controls"><input type="text" class="span8" name="user_money" value="{{ user.user_money }}" disabled placeholder="账户金额" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">卡类型</label>
+							<div class="controls"><input type="text" class="span8" name="ucate_id" value="{{ user.ucate_id }}" disabled placeholder="卡类型" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">性别</label>
+							<div class="controls"><input type="text" class="span8" name="sex" value="{{ user.sex }}" disabled placeholder="性别" /></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"></label>
+							<label class="controls"><a href="#" id="torent" class="btn btn-danger btn"><i class="icon-retweet"></i>确定销售</a></label>
+						</div>
+					</div>
+				</form>
+			</div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped with-check">
+              <thead>
+                <tr>
+				<th></th>
+                  <th>ISBN</th>
+                  <th>图书名称</th>
+                  <th>库存数</th>
+                  <th>图书类型</th>
+                  <th>售价</th>
+                  <th>货架位置</th>
+                  <th>进价</th>
+                  <th>入库日期</th>
+                  <th>备注</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody v-for="book in books">
+                <tr class="gradeA">
+				<td><input type="checkbox" name="book_id" v-on:click="get_num(book.id)" value="{{ book.id }}"/></td>
+                  <td>{{ book.isbn }}</td>
+                  <td>{{ book.book_name }}</td>
+                  <td>{{ book.num }}</td>
+                  <td>{{ book.bcate_id | tobookcate }}</td>
+                  <td>{{ book.book_money }}</td>
+                  <td>{{ book.local }}</td>
+                  <td>{{ book.in_money }}</td>
+                  <td>{{ book.in_time | todate }}</td>
+                  <td>{{ book.note }}</td>
+                  <td>{{ checkedNames | json }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+		</div>	
+      </div>
+    </div>
+<div class="modal fade" id="Mymodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+        <h4 class="modal-title" id="myModalLabel">图书数量</h4>
+      </div>
+      <div class="modal-body">
+		<div class="control-group">
+			<div class="controls"><input type="text" name="book_num" v-model="book_num" placeholder="数量" /></div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="set_num" data-dismiss="modal">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/maruti.js"></script> 
+<script src="js/maruti.tables.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/vue.book.filter.js"></script>
+<script>
+var rent_books=new Array();
+var DateTable = new Vue({
+	el: '#table-data',
+	data: {
+		books:[],
+		user:'',
+		book_num:'',
+		type:1
+	},
+	methods: {
+		search_book: function(ser,ser_type) {
+			var vm = this;
+			$.ajax({
+				url: 'http://myslim.whj.com/books/books',
+				data: {
+					ser:ser,
+					ser_type:ser_type
+				},
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.books=vm.books.concat(JSON.parse(data).data);
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		search_user: function(ser,ser_type) {
+			var vm = this;
+			vm.user = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/users/users',
+				data: {
+					ser:ser,
+					ser_type:ser_type
+				},
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.user=JSON.parse(data).data[0];
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		torent: function(books,uid) {
+			var vm = this;
+			vm.user = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/sells/sell',
+				data: {
+					books:books,
+					uid:uid,
+					type:vm.type
+				},
+				type: 'POST',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						alert("销售成功");
+					} else {
+						alert("销售失败："+JSON.parse(data).data);
+					}
+				}
+			})
+		},
+		get_num: function(bid) {
+			var vm = this;
+			vm.book_num=1;
+			vm.book_id=bid;
+			var i = rent_books.length;
+			var k=1;
+			while (i--) {
+				if(rent_books[i]['id']==bid) {
+					rent_books.splice(i,1);
+					k=2;
+					break;
+				}
+			}
+			if(k==1) {
+				$('#Mymodal').modal('show');
+			}
+		}
+	}
+})
+$("#search-book").click(function(){
+	DateTable.search_book($("#book_ser").val(),$("#book_ser_type").val());
+	return false;
+});
+$("#search-user").click(function(){
+	DateTable.search_user($("#user_ser").val(),$("#user_ser_type").val());
+	return false;
+});
+$("#set_num").click(function(){
+	var whj=new Object();
+	whj['num']=DateTable.book_num;
+	whj['id']=DateTable.book_id;
+	rent_books.splice(0,0,whj);
+	console.log(JSON.stringify(rent_books));
+	
+});
+
+$("#torent").click(function(){
+	if(!DateTable.user) {
+		if($('#type').attr('checked')) {
+			DateTable.type=2;
+			DateTable.torent(JSON.stringify(rent_books),DateTable.user.id);
+		} else {
+			alert("请选中会员或者选中零售按钮");
+		}
+	} else {
+		DateTable.type=1;
+		DateTable.torent(JSON.stringify(rent_books),DateTable.user.id);
+	}
+	return false;
+});
+var gui = require('nw.gui');
+function editone(id) {
+	var win = gui.Window.open('user_cate_edit.html?id='+id, {
+		position: 'center',
+		width: 980,
+		height: 500
+	});
+}
+</script>
+</body>
+</html>

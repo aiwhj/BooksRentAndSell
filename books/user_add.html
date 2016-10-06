@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>永豪图书管理系统</title><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/fullcalendar.css" />
+<link rel="stylesheet" href="css/maruti-style.css" />
+<link rel="stylesheet" href="css/maruti-media.css" class="skin-color" />
+<link rel="stylesheet" href="css/uniform.css" />
+<link rel="stylesheet" href="css/select2.css" />
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+		<div class="widget-box" id="table-data">
+			<div class="widget-title">
+				<span class="icon">
+					<i class="icon-align-justify"></i>									
+				</span>
+				<h5>会员办卡</h5>
+			</div>
+			<form id="form-data" class="form-horizontal">
+			<div class="widget-content nopadding">
+				<div class="span6">
+					<div class="control-group">
+						<label class="control-label">卡号</label>
+						<div class="controls"><input type="text" class="span10" name="card_id" placeholder="卡号" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">性别</label>
+						<div class="controls">
+							<select name="sex">
+							  <option value="1" selected>男</option>
+							  <option value="2">女</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">证件号码</label>
+						<div class="controls"><input type="text" class="span10" name="idcard" placeholder="证件号码" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">账户余额</label>
+						<div class="controls"><input type="text" class="span10" name="user_money" placeholder="账户余额" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">办卡金额</label>
+						<div class="controls"><input type="text" class="span10" name="banka_money" placeholder="办卡金额" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">租借周期</label>
+						<div class="controls"><input type="text" class="span10" name="banka_money" placeholder="租借周期" /></div>
+					</div>
+				</div>
+				<div class="span6">
+					<div class="control-group">
+						<label class="control-label">姓名</label>
+						<div class="controls"><input type="text" class="span10" name="user_name" placeholder="姓名" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">卡类型</label>
+						<div class="controls">
+							<select v-model="selected" name="ucate_id">
+							  <option v-for="option in items" v-bind:value="option.id">
+								{{ option.name }}
+							  </option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">手机号码</label>
+						<div class="controls"><input type="text" class="span10" name="phone" placeholder="手机号码" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">押金</label>
+						<div class="controls"><input type="text" class="span10" name="yajin" placeholder="押金" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">赠送金额</label>
+						<div class="controls"><input type="text" class="span10" name="zengsong" placeholder="赠送金额" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">备注</label>
+						<div class="controls"><input type="text" class="span10" name="user_note" placeholder="备注" /></div>
+					</div>
+				</div>
+					<div class="control-group">
+						<div class="form-actions">
+							<button class="btn btn-success">新增</button>
+						</div>
+					</div>
+				
+			</div>
+			</form>
+		</div>	
+      </div>
+    </div>
+  </div>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/jquery.json.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/maruti.js"></script> 
+<script src="js/maruti.tables.js"></script>
+<script src="js/vue.js"></script>
+<script>
+var page=1;
+var DateTable = new Vue({
+	el: '#table-data',
+	data: {
+		items: '',
+		selected: '1'
+	},
+	methods: {
+		load: function() {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/usercates/usercates',
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						if(JSON.parse(data).data=='') {
+							alert("暂时没有数据");
+						} else {
+							vm.items=JSON.parse(data).data;
+						}
+					} else {
+						alert("数据出错");
+					}
+				}
+			})
+		},
+		sub_data: function(data) {
+			var vm = this;
+			$.ajax({
+				url: 'http://myslim.whj.com/users/user',
+				type: 'POST',
+				data: data,
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						alert("新增成功");
+					} else {
+						alert("新增失败："+JSON.parse(data).data);
+					}
+				},
+				error: function(data) {
+					alert("出错"+JSON.stringify(data));
+				}
+			})
+		}
+	}
+})
+DateTable.load();
+$("form").submit(function() {
+	var data=$("#form-data").serializeArray();
+	var id_array=new Object();
+	data.forEach(function (e) {
+		id_array[e.name]=e.value;
+		console.log(e.name+'||'+e.value);
+	});
+	DateTable.sub_data(id_array);
+	return false;
+});
+</script>
+</body>
+</html>

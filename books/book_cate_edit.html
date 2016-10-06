@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>永豪图书管理系统</title><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="css/fullcalendar.css" />
+<link rel="stylesheet" href="css/maruti-style.css" />
+<link rel="stylesheet" href="css/maruti-media.css" class="skin-color" />
+<link rel="stylesheet" href="css/uniform.css" />
+<link rel="stylesheet" href="css/select2.css" />
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+		<div class="widget-box" id="table-data">
+			<div class="widget-title">
+				<span class="icon">
+					<i class="icon-align-justify"></i>									
+				</span>
+				<h5>编辑图书类型</h5>
+			</div>
+			<div class="widget-content nopadding">
+				<form id="form-data" class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label">类型名称</label>
+						<div class="controls"><input type="text" class="span8" name="name" value="{{ item.name }}" placeholder="卡名称" /></div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">销售折扣</label>
+						<div class="controls"><input type="text" class="span8" name="zhekou" value="{{ item.zhekou }}" placeholder="销售折扣" />元</div>
+					</div>
+					<div class="form-actions">
+						<button type="submit" id="sub" class="btn btn-success">编辑</button>
+					</div>
+				</form>
+			</div>
+		</div>	
+      </div>
+    </div>
+  </div>
+<script src="js/jquery.min.js"></script> 
+<script src="js/jquery.ui.custom.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.uniform.js"></script> 
+<script src="js/jquery.json.js"></script> 
+<script src="js/select2.min.js"></script> 
+<script src="js/jquery.dataTables.min.js"></script> 
+<script src="js/maruti.js"></script> 
+<script src="js/maruti.tables.js"></script>
+<script src="js/vue.js"></script>
+<script>
+var DateTable = new Vue({
+	el: '#table-data',
+	data: {
+		item: '',
+		id:''
+	},
+	methods: {
+		load: function(id) {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/bookcates/bookcate/'+id,
+				type: 'GET',
+				success: function(data) {
+					if(JSON.parse(data).data=='') {
+						alert("暂时没有数据");
+					} else {
+						vm.item=JSON.parse(data).data;
+					}
+				}
+			})
+		},
+		sub_data: function(data,id) {
+			var vm = this;
+			vm.items = '';
+			$.ajax({
+				url: 'http://myslim.whj.com/bookcates/bookcate/'+id,
+				type: 'PUT',
+				data: data,
+				success: function(data) {
+					if(JSON.parse(data).status=='success') {
+						alert("编辑成功");
+					} else {
+						alert("编辑失败："+JSON.parse(data).data);
+					}
+					vm.load(vm.id);
+				}
+			})
+		}
+	}
+})
+function getQueryString(name) {  
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
+    var r = window.location.search.substr(1).match(reg);  
+    if (r != null) return unescape(r[2]); return null;  
+}
+DateTable.id = getQueryString("id");
+if(!DateTable.id) {
+	alert("没有要编辑的id值，请返回重试");
+} else {
+	DateTable.load(DateTable.id);
+}
+$("form").submit(function() {
+	var data=$("#form-data").serializeArray();
+	var id_array=new Object();
+	data.forEach(function (e) {
+		id_array[e.name]=e.value;
+	});
+	DateTable.sub_data(id_array,DateTable.id);
+	return false;
+});
+</script>
+</body>
+</html>
