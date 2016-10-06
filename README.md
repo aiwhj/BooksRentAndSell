@@ -1,8 +1,10 @@
 # Restful+Slimframework+Vue实现的图书租赁销售系统
+
 ## 新手练习简单的  `Restful`
 * 后端使用`slim`框架结合`laravel`的`Eloquent` ORM
 * 前端使用一些简单的`Vue`数据绑定,在books文件夹内
 * 把前端界面塞到了`nwjs`里面了，所以有少量`nwjs`代码
+
 ## 学习技能
 * `php`了解到了一些闭包及路由,简单的依赖注入，以及一些中间件知识
 * `restful` 设计的基本原理，以及HTTP中`GET`,`POST`,`PUT`, `DELETE` 四大协议，数据的提交和Header请求。包括`ajax`的跨域请求等知识
